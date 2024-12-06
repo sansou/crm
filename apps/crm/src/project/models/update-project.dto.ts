@@ -1,4 +1,4 @@
-import { Project } from './project.entity';
+import { Project } from './project';
 
 export class UpdateProjectDto implements Partial<Project>{
   

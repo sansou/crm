@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Project } from '../project/entities/project.entity';
+import { Project } from '../project/models/project';
 import { Integration } from './entities/integration.entity';
 import { ProjectService } from '../project/project.service';
 
