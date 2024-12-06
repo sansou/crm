@@ -1,4 +1,4 @@
-import { Integration } from "../../integration/entities/integration.entity";
+import { Integration } from "../../integration/entities/integration";
 
 
 export class Project {
