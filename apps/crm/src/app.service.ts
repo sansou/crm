@@ -5,7 +5,7 @@ export class AppService {
   async defaultNesJS(): Promise<string> {
     throw new Error('Method not implemented.');
   }
-  getHello(): string {
+  async getHello(): Promise<string> {
     return 'Hello World!';
   }
 }

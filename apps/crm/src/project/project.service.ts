@@ -2,48 +2,36 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Project } from './models/project';
 import { UpdateProjectDto } from './models/update-project.dto';
 import DocumentStore, { IDocumentSession, IDocumentStore } from 'ravendb';
-import { generateUuid } from '../utils';
+import { RavenDbService } from '../raven-db/raven-db.service';
 
 @Injectable()
 export class ProjectService {
-  private static store: IDocumentStore = null;
-
-  private initializeGlobaStore(): DocumentStore {
-    return new DocumentStore('http://localhost:8080', 'crm');
-  }
-
-  getGlobalStore() {
-    if (!ProjectService.store) {
-      ProjectService.store = this.initializeGlobaStore();
-      ProjectService.store.conventions.registerEntityType(Project);
-      ProjectService.store.initialize();
-    }
-    return ProjectService.store;
-  }
+  constructor(
+    private readonly dbService: RavenDbService
+  ) { }
 
   async create(project: Project) {
-    const store = this.getGlobalStore();
     let session: IDocumentSession;
 
     try {
-      session = store.openSession();
-      const id = generateUuid();
-      await session.store<Project>(project, `Proj/${id}`);
+      session = this.dbService.getSession();
+      await session.store<Project>(project, "projects/");
       await session.saveChanges();
-      return await session.load(`Proj/${id}`, Project);
+      return {
+        ...project,
+        id: session.advanced.getDocumentId(project)
+      };
     } finally {
       session.dispose();
     }
   }
 
   async findById(projId: string) {
-    const store = this.getGlobalStore();
     let session: IDocumentSession;
-    const id = "Proj/" + projId;
 
     try {
-      session = store.openSession();
-      const project = await session.load<Project>(id);
+      session = this.dbService.getSession();
+      const project = await session.load<Project>(projId);
       if (!project) throw new NotFoundException("Project not found");
       return project;
     } finally {
@@ -52,13 +40,11 @@ export class ProjectService {
   }
 
   async findAll() {
-    const store = this.getGlobalStore();
-
     let session: IDocumentSession;
 
     try {
-      session = store.openSession();
-      const project = await session.query({ collection: 'Proj'}).all();
+      session = this.dbService.getSession();
+      const project = await session.query({ collection: 'projects' }).all();
       return project;
     } finally {
       session.dispose();
@@ -66,13 +52,12 @@ export class ProjectService {
   }
 
   async update(projId: string, updateDto: UpdateProjectDto) {
-    const store = this.getGlobalStore();
     let session: IDocumentSession;
 
     try {
-      session = store.openSession();
+      session = this.dbService.getSession();
 
-      const project = await session.load<Project>(`Proj/${projId}`);
+      const project = await session.load<Project>(`projects/${projId}`);
       const updatedFields = Object.keys(updateDto);
       //atualiza apenas os campos que vieram
       updatedFields.forEach((key) => {
@@ -81,7 +66,7 @@ export class ProjectService {
           project[key] = updateDto[key];
         }
       });
-      
+
       await session.saveChanges();
     } finally {
       session.dispose();
@@ -89,12 +74,11 @@ export class ProjectService {
   }
 
   delete(projId: string) {
-    const store = this.getGlobalStore();
     let session: IDocumentSession;
 
     try {
-      session = store.openSession();
-      session.delete<Project>(`Proj/${projId}`);
+      const session = this.dbService.getSession();
+      session.delete<Project>(`projects/${projId}`);
       session.saveChanges();
     } finally {
       session.dispose();

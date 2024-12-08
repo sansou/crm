@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { IntegrationService } from './integration.service';
-import { Integration } from './entities/integration';
+import { Integration } from './models/integration';
+import { UpdateProjectDto } from '../project/models/update-project.dto';
 
 @Controller('integration')
 export class IntegrationController {
@@ -10,18 +11,18 @@ export class IntegrationController {
   ){}
   @Post()
   create(@Body() integrationDto: Integration) {
-    return this.service.create(integrationDto);
+    // return this.service.create(integrationDto);
   }
 
   @Get(':id')
   get(@Param('id') projId: string) {    
-    return this.service.findById(projId);
+    // return this.service.findById(projId);
   }
 
   @Get()
   getAll() {
     
-    return this.service.findAll();
+    // return this.service.findAll();
   }
 
   @Patch(":id")
@@ -29,13 +30,13 @@ export class IntegrationController {
     @Param(':id') projId: string,
     @Body() updateProjDto: UpdateProjectDto
   ) {
-    return this.service.update(projId, updateProjDto);
+    // return this.service.update(projId, updateProjDto);
   }
 
   @Delete(":id")
   delete(
     @Param(':id') projId: string,
   ) {
-    return this.service.delete(projId);
+    // return this.service.delete(projId);
   }
 }
