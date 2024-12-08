@@ -8,6 +8,7 @@ export class Lead {
     public position?: string,
     public state?: string,
     public city?: string,
+    public createdAt: Date = new Date(),
     public data?: any
   ) { }
 }

@@ -2,6 +2,8 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import { ProjectService } from './project.service';
 import { Project } from './models/project';
 import { UpdateProjectDto } from './models/update-project.dto';
+import { Integration } from '../integration/models/integration';
+import { Lead } from '../lead/models/leads';
 
 @Controller('projects')
 export class ProjectController {
@@ -31,6 +33,14 @@ export class ProjectController {
     @Body() updateProjDto: UpdateProjectDto
   ) {
     return this.service.update(projId, updateProjDto);
+  }
+
+  @Patch(":id")
+  addIntegration(
+    @Param(':id') projId: string,
+    @Body() leads: Lead[]
+  ) {
+    return this.service.addLeadsToProject(projId, leads);
   }
 
   @Delete(":id")

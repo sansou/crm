@@ -14,4 +14,8 @@ export class RavenDbService {
     return this.store.openSession();
   }
 
+  getBulkInsert(){
+    return this.store.bulkInsert();
+  }
+
 }
