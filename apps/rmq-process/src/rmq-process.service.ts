@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { RmqContext } from '@nestjs/microservices';
 
 @Injectable()
 export class RmqProcessService {
-  getHello(): string {
-    return 'Hello World!';
+  defaultNestJS(data: any, context: RmqContext) {
+    return;
+    
   }
 }

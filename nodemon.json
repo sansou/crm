@@ -1,0 +1,6 @@
+{
+  "watch": ["./apps/crm/src"],
+  "ext": "ts",
+  "ignore": ["./apps/crm/src/**/*.spec.ts"],
+  "exec": "ts-node -r tsconfig-paths/register src/main.ts"
+}

@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import { ProjectService } from './project.service';
 import { Project } from './models/project';
 import { UpdateProjectDto } from './models/update-project.dto';
-import { Integration } from '../integration/models/integration';
 import { Lead } from '../lead/models/leads';
 
 @Controller('projects')
@@ -13,17 +12,20 @@ export class ProjectController {
 
   @Post()
   create(@Body() projDto: Project) {
+    console.log("entrei no controller");
+    
     return this.service.create(projDto);
   }
 
   @Get(':id')
   get(@Param('id') projId: string) {    
+    console.log('id:', projId);
+    
     return this.service.findById(projId);
   }
 
   @Get()
   getAll() {
-    
     return this.service.findAll();
   }
 
@@ -35,7 +37,7 @@ export class ProjectController {
     return this.service.update(projId, updateProjDto);
   }
 
-  @Patch(":id")
+  @Patch(":id/leads")
   addIntegration(
     @Param(':id') projId: string,
     @Body() leads: Lead[]
