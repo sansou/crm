@@ -4,7 +4,6 @@ import { UpdateProjectDto } from './models/update-project.dto';
 import { IDocumentSession } from 'ravendb';
 import { RavenDbService } from '../raven-db/raven-db.service';
 import { Lead } from '../lead/models/leads';
-import { AddLeadDto } from '../lead/models/add-lead.dto';
 
 @Injectable()
 export class ProjectService {
@@ -14,7 +13,7 @@ export class ProjectService {
 
   async create(project: Project) {
     let session: IDocumentSession;
-
+    
     try {
       session = this.dbService.getSession();
       await session.store<Project>(project, "projects/");

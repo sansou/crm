@@ -11,9 +11,7 @@ export class ProjectController {
   ) { }
 
   @Post()
-  async create(@Body() projDto: Project) {
-    console.log("entrei no controller");
-    
+  async create(@Body() projDto: Project) {   
     return this.service.create(projDto);
   }
 

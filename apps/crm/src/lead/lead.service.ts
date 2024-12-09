@@ -3,6 +3,7 @@ import { RavenDbService } from '../raven-db/raven-db.service';
 import { IDocumentSession } from 'ravendb';
 import { Lead } from './models/leads';
 import { UpdateLeadDto } from './models/update-lead.dto';
+import { Project } from '../project/models/project';
 
 @Injectable()
 export class LeadService {
@@ -13,8 +14,12 @@ export class LeadService {
   async add(lead: Lead) {
     let session: IDocumentSession;
     try {
+      await console.log("lead:", lead);
+
       session = this.dbService.getSession();
-      await session.store<Lead>(lead);
+      await session.store<Lead>(lead, 'leads/');
+      const project = await session.load<Project>(lead.projectId);
+      await project.leads.push(await session.advanced.getDocumentId(lead));
       await session.saveChanges();
       return {
         ...lead,
@@ -41,9 +46,13 @@ export class LeadService {
   async findAllByProject(projId: string) {
     let session: IDocumentSession;
 
+    console.log("projid", projId);
     try {
-      session = this.dbService.getSession();
-      const leads = await session.query<Lead>({ collection: 'leads' }).whereEquals('projectId', projId).all();
+      
+      session = await this.dbService.getSession();
+      const leads = await session.query<Lead[]>({ collection: 'leads' }).whereEquals('projectId', 'projects/'+projId).all();
+      console.log("leads", leads);
+      
       return leads;
     } finally {
       session.dispose();
@@ -71,13 +80,13 @@ export class LeadService {
     }
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     let session: IDocumentSession;
 
     try {
-      const session = this.dbService.getSession();
-      session.delete<Lead>("leads" + id);
-      session.saveChanges();
+      session = this.dbService.getSession();
+      await session.delete<Lead>("leads/" + id);
+      await session.saveChanges();
     } finally {
       session.dispose();
     }

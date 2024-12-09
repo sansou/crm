@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import DocumentStore from 'ravendb';
+import { Project } from '../project/models/project';
+import { Lead } from '../lead/models/leads';
 
 @Injectable()
 export class RavenDbService {
@@ -8,6 +10,8 @@ export class RavenDbService {
   constructor(){
     this.store = new DocumentStore('http://localhost:8080', 'crm');
     this.store.initialize();
+    this.store.conventions.registerEntityType(Project);
+    this.store.conventions.registerEntityType(Lead);
   }
 
   getSession() {
