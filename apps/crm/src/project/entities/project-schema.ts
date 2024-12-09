@@ -16,10 +16,6 @@ export const ProjectSchema = new Schema({
 		type: String,
     default: 'ATIVO'
 	},
-	leads: {
-		type: [String],
-    default: []
-	},
 	entityType: {
 		type: String,
 		default: 'project',

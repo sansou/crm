@@ -6,7 +6,6 @@ export interface Project extends Item {
     name: string,
     status: string,
     entityType: string;
-    leads: string[],
     createdAt?: Date,
     updatadAt?: Date,
 }

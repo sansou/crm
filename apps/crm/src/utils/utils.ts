@@ -1,4 +1,4 @@
-// import { nanoid } from 'nanoid';
+import { nanoid } from 'nanoid';
 import { EntityTypes } from "./enums";
 
 export function createDynamooseId(id: string, entityType: EntityTypes): string{
@@ -15,7 +15,7 @@ export function getIdByDynamooseId(id: string): string{
 }
 
 export function createId(): string {
-    return ;
+    return nanoid();
 }
 
 export function createDynamooseIdWithoutThrows(id: string, entityType: EntityTypes): string{

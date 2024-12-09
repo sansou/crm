@@ -15,9 +15,7 @@ export class ProjectController {
   }
 
   @Get(':id')
-  async get(@Param('id') projId: string) {    
-    console.log('id:', projId);
-    
+  async get(@Param('id') projId: string) {       
     return this.service.findById(projId);
   }
 
@@ -32,20 +30,6 @@ export class ProjectController {
     @Body() updateProjDto: any
   ) {
     return this.service.update(projId, updateProjDto);
-  }
-
-  @Patch('leads')
-  async addLeads(
-    @Body() leads: Lead[]
-  ) {    
-    return  await this.service.addLeadsToProject(leads);
-  }
-
-  @Patch('lead')
-  async addLead(
-    @Body() lead: Lead
-  ) {
-    return await this.service.addLead(lead);
   }
 
   @Delete(':id')

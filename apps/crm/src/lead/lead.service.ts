@@ -19,7 +19,7 @@ export class LeadService {
       session = this.dbService.getSession();
       await session.store<Lead>(lead, 'leads/');
       const project = await session.load<Project>(lead.projectId);
-      await project.leads.push(await session.advanced.getDocumentId(lead));
+      // await project.leads.push(await session.advanced.getDocumentId(lead));
       await session.saveChanges();
       return {
         ...lead,
