@@ -16,13 +16,12 @@ function captureLead() {
 
   console.log('Lead Capturado:', lead);
 
-
   sendLeadToAPI(lead);
 }
 
 // Função para enviar os dados capturados para a API
 function sendLeadToAPI(lead) {
-  fetch('http://localhost:3000/leads', {
+  fetch('http://localhost:3000/queue', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

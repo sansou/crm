@@ -38,8 +38,7 @@ export class ProjectController {
   @Patch('leads')
   async addLeads(
     @Body() leads: Lead[]
-  ) {
-    
+  ) {    
     return  await this.service.addLeadsToProject(leads);
   }
 

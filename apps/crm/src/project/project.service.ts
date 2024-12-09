@@ -73,13 +73,13 @@ export class ProjectService {
     }
   }
 
-  delete(id: string) {
+  async delete(id: string) {
     let session: IDocumentSession;
 
     try {
       session = this.dbService.getSession();
-      session.delete<Project>("projects/" + id);
-      session.saveChanges();
+      await session.delete<Project>("projects/" + id);
+      await session.saveChanges();
     } finally {
       session.dispose();
     }
