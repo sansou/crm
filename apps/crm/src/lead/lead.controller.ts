@@ -9,7 +9,7 @@ export class LeadController {
     private readonly service: LeadService
   ) { }
 
-  @Post('project/:projectId')
+  @Post('/project/:projectId')
   async create(
     @Param('projectId') pk: string,
     @Body() lead: CreateLeadDto
