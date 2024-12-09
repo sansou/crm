@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { Project } from '../project/models/project';
+import { Project } from '../project/entities/project.entity';
 import { Integration } from './models/integration';
 import { ProjectService } from '../project/project.service';
 import DocumentStore, { IDocumentStore } from 'ravendb';

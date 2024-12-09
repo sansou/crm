@@ -1,8 +1,25 @@
-export function getAfterSlash(input: string): string {
-  const parts = input.split('/');
-  return parts[parts.length - 1];
+// import { nanoid } from 'nanoid';
+import { EntityTypes } from "./enums";
+
+export function createDynamooseId(id: string, entityType: EntityTypes): string{
+  if (!id) throw new Error('ID is required');
+  if (!entityType) throw new Error('Entitity type is required');
+  if (id[4] === "#")  return id;
+  return `${entityType}#${id}`;
 }
 
-// Exemplo de uso
-const result = getAfterSlash('projects/0000000000000000001-A');
-console.log(result); // Saída: 0000000000000000001-A
+export function getIdByDynamooseId(id: string): string{
+  if (!id) throw new Error('ID is required');
+  if (!(id[4] === "#"))  return id;
+  return id.slice(5);
+}
+
+export function createId(): string {
+    return ;
+}
+
+export function createDynamooseIdWithoutThrows(id: string, entityType: EntityTypes): string{
+    if (!id || id?.length < 4) return null
+    if (id[4] === "#")  return id;
+    return `${entityType}#${id}`;
+}

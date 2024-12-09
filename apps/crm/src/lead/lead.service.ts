@@ -3,7 +3,7 @@ import { RavenDbService } from '../raven-db/raven-db.service';
 import { IDocumentSession } from 'ravendb';
 import { Lead } from './models/leads';
 import { UpdateLeadDto } from './models/update-lead.dto';
-import { Project } from '../project/models/project';
+import { Project } from '../project/entities/project.entity';
 
 @Injectable()
 export class LeadService {

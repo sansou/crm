@@ -1,30 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Project } from './models/project';
-import { UpdateProjectDto } from './models/update-project.dto';
+import { Project } from './entities/project.entity';
 import { IDocumentSession } from 'ravendb';
 import { RavenDbService } from '../raven-db/raven-db.service';
 import { Lead } from '../lead/models/leads';
+import { Model } from 'dynamoose/dist/Model';
+import * as dynamoose from "dynamoose";
+import { ProjectSchema } from './entities/project-schema';
+import { CreateProjectDTO } from './dtos/create-project.dto';
+import { createDynamooseId, createId } from '../utils/utils';
+import { EntityTypes, StatusProject } from '../utils/enums';
 
 @Injectable()
 export class ProjectService {
+  private dbInstance: Model<Project>
   constructor(
     private readonly dbService: RavenDbService
-  ) { }
+  ) {
+    this.dbInstance = dynamoose.model<Project>('crm', ProjectSchema)
+  }
 
-  async create(project: Project) {
-    let session: IDocumentSession;
-    
-    try {
-      session = this.dbService.getSession();
-      await session.store<Project>(project, "projects/");
-      await session.saveChanges();
-      return {
-        ...project,
-        id: session.advanced.getDocumentId(project)
-      };
-    } finally {
-      session.dispose();
-    }
+  async create(dto: CreateProjectDTO) {
+    const pk = createDynamooseId(createId(), EntityTypes.PROJECT);
+    const project = await this.dbInstance.create({ pk, sk: pk, ...dto })
+    return normalizeProject(project);
   }
 
   async findById(id: string) {
@@ -52,7 +50,7 @@ export class ProjectService {
     }
   }
 
-  async update(id: string, updateDto: UpdateProjectDto) {
+  async update(id: string, updateDto: any) {
     let session: IDocumentSession;
 
     try {
@@ -126,3 +124,7 @@ export class ProjectService {
   }
 
 }
+function normalizeProject(project: Project) {
+  throw new Error('Function not implemented.');
+}
+
