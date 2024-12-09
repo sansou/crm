@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { LeadService } from './lead.service';
-import { Lead } from './models/leads';
+import { CreateLeadDto } from './dtos/create-lead.dto';
+import { UpdateLeadDto } from './dtos/update-lead.dto';
 
 @Controller('leads')
 export class LeadController {
@@ -8,19 +9,34 @@ export class LeadController {
     private readonly service: LeadService
   ) { }
 
-  @Post()
-  async create(@Body() lead: Lead) {
-    return this.service.add(lead);
+  @Post('project/:projectId')
+  async create(
+    @Param('projectId') pk: string,
+    @Body() lead: CreateLeadDto
+  ) {
+    return this.service.create(pk, lead);
   }
 
   @Get('/project/:projectId')
-  async findAll(@Param() projId: string) {
-    return this.service.findAllByProject(projId);
+  async findAll(@Param('projectId') pk: string) {
+    return this.service.findAll(pk);
   }
   
-  @Delete(':id')
-  async delete(@Param() id:string){ 
-    return await this.service.delete(id);
+  @Delete(':id/project/:projectId')
+  async delete(
+    @Param('id') pk:string,
+    @Param('projectId') sk:string,
+  ){ 
+    return await this.service.delete(pk, sk);
+  }
+
+  @Patch(':id/project/:projectId')
+  async update(
+    @Body() lead: UpdateLeadDto,
+    @Param('id') pk:string,
+    @Param('project') sk: string
+  ) {
+    return await this.service.update(pk, sk, lead);
   }
 
 }

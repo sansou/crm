@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { Project } from './entities/project.entity';
-import { Lead } from '../lead/models/leads';
+import { Lead } from '../lead/entities/leads.entity';
 
 @Controller('projects')
 export class ProjectController {
@@ -33,9 +33,9 @@ export class ProjectController {
   }
 
   @Delete(':id')
-  delete(
-    @Param(':id') projId: string,
-  ) {
-    return this.service.delete(projId);
+  async delete(
+    @Param('id') pk: string,
+  ) {  
+    return await this.service.delete(pk);
   }
 }

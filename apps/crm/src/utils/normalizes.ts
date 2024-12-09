@@ -1,3 +1,4 @@
+import { Lead } from "../lead/entities/leads.entity";
 import { Project } from "../project/entities/project.entity";
 import { getIdByDynamooseId } from "./utils";
 
@@ -13,4 +14,18 @@ export function normalizeProjectIdsForList(projects: Project[]): Project[] {
     proj.sk = getIdByDynamooseId(proj.sk);
   })
   return projects;
+}
+
+export function normalizeLeadIds(lead: Lead): Lead {
+  lead.pk = getIdByDynamooseId(lead.pk);
+  lead.sk = getIdByDynamooseId(lead.sk);
+  return lead;
+}
+
+export function normalizeLeadIdsForList(leads: Lead[]): Lead[] {
+  leads.forEach(lead => {
+    lead.pk = getIdByDynamooseId(lead.pk);
+    lead.sk = getIdByDynamooseId(lead.sk);
+  })
+  return leads;
 }

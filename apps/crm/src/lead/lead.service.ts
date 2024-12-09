@@ -1,95 +1,65 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { RavenDbService } from '../raven-db/raven-db.service';
-import { IDocumentSession } from 'ravendb';
-import { Lead } from './models/leads';
-import { UpdateLeadDto } from './models/update-lead.dto';
-import { Project } from '../project/entities/project.entity';
+import { UpdateLeadDto } from './dtos/update-lead.dto';
+import { CreateLeadDto } from './dtos/create-lead.dto';
+import { Model } from 'dynamoose/dist/Model';
+import * as dynamoose from "dynamoose";
+import { LeadSchema } from './entities/lead-schema';
+import { Lead } from './entities/leads.entity';
+import { createDynamooseId, createId } from '../utils/utils';
+import { EntityTypes } from '../utils/enums';
+import { normalizeLeadIds } from '../utils/normalizes';
 
 @Injectable()
 export class LeadService {
+  private dbInstance: Model<Lead>
   constructor(
-    private readonly dbService: RavenDbService
-  ) { }
-
-  async add(lead: Lead) {
-    let session: IDocumentSession;
-    try {
-      await console.log("lead:", lead);
-
-      session = this.dbService.getSession();
-      await session.store<Lead>(lead, 'leads/');
-      const project = await session.load<Project>(lead.projectId);
-      // await project.leads.push(await session.advanced.getDocumentId(lead));
-      await session.saveChanges();
-      return {
-        ...lead,
-        id: session.advanced.getDocumentId(lead)
-      };
-    } finally {
-      session.dispose();
-    }
+  ) {
+    this.dbInstance = dynamoose.model<Lead>('crm', LeadSchema)
   }
 
-  async findById(id: string) {
-    let session: IDocumentSession;
+  async create(pk: string, dto: CreateLeadDto) {
+    console.log("pk antes", pk);
+    
+    pk = createDynamooseId(pk, EntityTypes.PROJECT);
+    console.log("pk depois", pk);
 
-    try {
-      session = this.dbService.getSession();
-      const lead = await session.load<Lead>(id);
-      if (!lead) throw new NotFoundException("Lead not found");
-      return lead;
-    } finally {
-      session.dispose();
-    }
+    const sk = createDynamooseId(createId(), EntityTypes.LEAD);
+    const lead = await this.dbInstance.create({ pk, sk, ...dto });
+    console.log(lead);
+    
+    return normalizeLeadIds(lead);
   }
 
-  async findAllByProject(projId: string) {
-    let session: IDocumentSession;
-
-    console.log("projid", projId);
-    try {
-      
-      session = await this.dbService.getSession();
-      const leads = await session.query<Lead[]>({ collection: 'leads' }).whereEquals('projectId', 'projects/'+projId).all();
-      console.log("leads", leads);
-      
-      return leads;
-    } finally {
-      session.dispose();
-    }
+  async findById(pk: string, sk: string) {
+    pk = createDynamooseId(pk, EntityTypes.PROJECT);
+    sk = createDynamooseId(sk, EntityTypes.LEAD);
+    const lead = await this.dbInstance.get({pk, sk});
+    if (!lead) throw new NotFoundException('Lead Not Found');
+    return normalizeLeadIds(lead);
   }
 
-  async update(id: string, updateDto: UpdateLeadDto) {
-    let session: IDocumentSession;
-
-    try {
-      session = this.dbService.getSession();
-
-      const project = await session.load<Lead>("leads/" + id);
-      const updatedFields = Object.keys(updateDto);
-      //atualiza apenas os campos que vieram
-      updatedFields.forEach((key) => {
-        if (updateDto[key] !== undefined) {
-          project[key] = updateDto[key];
-        }
-      });
-
-      await session.saveChanges();
-    } finally {
-      session.dispose();
-    }
+  async findAll(id: string) {
+    const projects = await this.dbInstance.query('entityType').eq('lead').exec();
+    return projects;
   }
 
-  async delete(id: string) {
-    let session: IDocumentSession;
+  async findAllByProject(pk: string) {
+    console.log("pk antes", pk);    
+    pk = createDynamooseId(pk, EntityTypes.PROJECT);
+    console.log("pk depois", pk);
+    const leads = await this.dbInstance.get({ pk, sk: pk });
+    return normalizeLeadIds(leads);
+  }
 
-    try {
-      session = this.dbService.getSession();
-      await session.delete<Lead>("leads/" + id);
-      await session.saveChanges();
-    } finally {
-      session.dispose();
-    }
+  async update(pk: string, sk: string, updateDto: UpdateLeadDto) {
+    pk = createDynamooseId(pk, EntityTypes.PROJECT);
+    sk = createDynamooseId(pk, EntityTypes.LEAD);
+    const project = await this.dbInstance.update({ pk, sk: pk }, updateDto);
+    return normalizeLeadIds(project);
+  }
+
+  async delete(pk: string, sk: string) {
+
   }
 
 }

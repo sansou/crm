@@ -1,8 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Project } from './entities/project.entity';
-import { IDocumentSession } from 'ravendb';
-import { RavenDbService } from '../raven-db/raven-db.service';
-import { Lead } from '../lead/models/leads';
 import { Model } from 'dynamoose/dist/Model';
 import * as dynamoose from "dynamoose";
 import { ProjectSchema } from './entities/project-schema';
@@ -22,7 +19,7 @@ export class ProjectService {
 
   async create(dto: CreateProjectDTO) {
     const pk = createDynamooseId(createId(), EntityTypes.PROJECT);
-    const project = await this.dbInstance.create({ pk, sk: pk, ...dto })
+    const project = await this.dbInstance.create({ pk, sk: pk, ...dto });
     return normalizeProjectIds(project);
   }
 
@@ -44,7 +41,7 @@ export class ProjectService {
     return normalizeProjectIds(project);
   }
 
-  async delete(pk: string) {
+  async delete(pk: string) {    
     pk = createDynamooseId(pk, EntityTypes.PROJECT);
     await this.dbInstance.delete({ pk, sk: pk });
   }
