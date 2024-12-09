@@ -31,7 +31,7 @@ export class LeadService {
     try {
       session = this.dbService.getSession();
       const lead = await session.load<Lead>(id);
-      if (!lead) throw new NotFoundException("Project not found");
+      if (!lead) throw new NotFoundException("Lead not found");
       return lead;
     } finally {
       session.dispose();

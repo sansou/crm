@@ -4,6 +4,7 @@ import { UpdateProjectDto } from './models/update-project.dto';
 import { IDocumentSession } from 'ravendb';
 import { RavenDbService } from '../raven-db/raven-db.service';
 import { Lead } from '../lead/models/leads';
+import { AddLeadDto } from '../lead/models/add-lead.dto';
 
 @Injectable()
 export class ProjectService {
@@ -32,7 +33,7 @@ export class ProjectService {
 
     try {
       session = this.dbService.getSession();
-      const project = await session.load<Project>(id);
+      const project = await session.load<Project>('projects/' + id);
       if (!project) throw new NotFoundException("Project not found");
       return project;
     } finally {
@@ -45,7 +46,7 @@ export class ProjectService {
 
     try {
       session = this.dbService.getSession();
-      const project = await session.query({ collection: 'projects' }).all();
+      const project = await session.query({ collection: 'projects/' }).all();
       return project;
     } finally {
       session.dispose();
@@ -58,7 +59,7 @@ export class ProjectService {
     try {
       session = this.dbService.getSession();
 
-      const project = await session.load<Project>(`projects/${id}`);
+      const project = await session.load<Project>("projects/" + id);
       const updatedFields = Object.keys(updateDto);
       //atualiza apenas os campos que vieram
       updatedFields.forEach((key) => {
@@ -85,8 +86,30 @@ export class ProjectService {
     }
   }
 
-  async addLeadsToProject(id: string, leads: Lead[]) {
+
+  async addLead(lead: Lead) {
     let session: IDocumentSession;
+
+    console.log("lead:", lead);
+    if (!lead) throw new NotFoundException()
+    try {
+      session = this.dbService.getSession();
+      const project = await session.load<Project>('projects/' + lead.projectId);
+      if (!project) throw new NotFoundException("Project not found");
+      await session.store(lead, 'leads/');
+      project.leads.push(session.advanced.getDocumentId(lead));
+      await session.saveChanges();
+    } finally {
+      session.dispose();
+    }
+
+  }
+
+  async addLeadsToProject(leads: Lead[]) {
+    let session: IDocumentSession;
+
+    const id = "projects/" + leads[0].projectId;
+
     try {
       session = this.dbService.getSession();
       const project = await session.load<Project>(id);

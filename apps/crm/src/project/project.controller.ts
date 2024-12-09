@@ -11,41 +11,48 @@ export class ProjectController {
   ) { }
 
   @Post()
-  create(@Body() projDto: Project) {
+  async create(@Body() projDto: Project) {
     console.log("entrei no controller");
     
     return this.service.create(projDto);
   }
 
   @Get(':id')
-  get(@Param('id') projId: string) {    
+  async get(@Param('id') projId: string) {    
     console.log('id:', projId);
     
     return this.service.findById(projId);
   }
 
   @Get()
-  getAll() {
+  async getAll() {
     return this.service.findAll();
   }
 
-  @Patch(":id")
-  update(
-    @Param(':id') projId: string,
+  @Patch(':id')
+  async update(
+    @Param('id') projId: string,
     @Body() updateProjDto: UpdateProjectDto
   ) {
     return this.service.update(projId, updateProjDto);
   }
 
-  @Patch(":id/leads")
-  addIntegration(
-    @Param(':id') projId: string,
+  @Patch('leads')
+  async addLeads(
     @Body() leads: Lead[]
   ) {
-    return this.service.addLeadsToProject(projId, leads);
+    
+    return  await this.service.addLeadsToProject(leads);
   }
 
-  @Delete(":id")
+  @Patch('lead')
+  async addLead(
+    @Body() lead: Lead
+  ) {
+    return await this.service.addLead(lead);
+  }
+
+  @Delete(':id')
   delete(
     @Param(':id') projId: string,
   ) {

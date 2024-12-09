@@ -18,4 +18,9 @@ export class RavenDbService {
     return this.store.bulkInsert();
   }
 
+  async getDocumentById(id: string) {
+    const session = this.store.openSession();
+    return await session.load(id);
+  }
+
 }
