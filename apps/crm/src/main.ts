@@ -42,7 +42,7 @@ async function bootstrap() {
     region: process?.env?.AWS_REGION
   });
 
-  dynamoose.aws.ddb.local();
-  // dynamoose.aws.ddb.set(ddb)
+  // dynamoose.aws.ddb.local();
+  dynamoose.aws.ddb.set(ddb)
 }
 bootstrap();
