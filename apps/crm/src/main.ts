@@ -37,12 +37,12 @@ async function bootstrap() {
   const ddb = new dynamoose.aws.ddb.DynamoDB({
     credentials: {
       accessKeyId: process?.env?.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process?.env?.AWS_ACCESS_SECRET_KEY
+      secretAccessKey: process?.env?.AWS_ACCESS_SECRET
     },
     region: process?.env?.AWS_REGION
   });
 
-  // dynamoose.aws.ddb.local();
-  dynamoose.aws.ddb.set(ddb)
+  dynamoose.aws.ddb.local();
+  // dynamoose.aws.ddb.set(ddb)
 }
 bootstrap();
