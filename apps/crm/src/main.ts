@@ -19,6 +19,12 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
+  //cors
+  app.enableCors({
+    origin: '*', // Ou especifique a origem permitida
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type, Authorization',
+  });
   await app.listen(process.env.PORT ?? 3000);
 
   //hotReload
@@ -36,7 +42,7 @@ async function bootstrap() {
     region: process?.env?.AWS_REGION
   });
 
-  // dynamoose.aws.ddb.local();
-  dynamoose.aws.ddb.set(ddb)
+  dynamoose.aws.ddb.local();
+  // dynamoose.aws.ddb.set(ddb)
 }
 bootstrap();

@@ -18,15 +18,9 @@ export class LeadService {
   }
 
   async create(pk: string, dto: CreateLeadDto) {
-    console.log("pk antes", pk);
-    
     pk = createDynamooseId(pk, EntityTypes.PROJECT);
-    console.log("pk depois", pk);
-
     const sk = createDynamooseId(createId(), EntityTypes.LEAD);
-    const lead = await this.dbInstance.create({ pk, sk, ...dto });
-    console.log(lead);
-    
+    const lead = await this.dbInstance.create({ pk, sk, ...dto });    
     return normalizeLeadIds(lead);
   }
 
@@ -59,7 +53,8 @@ export class LeadService {
   }
 
   async delete(pk: string, sk: string) {
-
+    pk = createDynamooseId(pk, EntityTypes.PROJECT);
+    await this.dbInstance.delete({ pk, sk });
   }
 
 }
