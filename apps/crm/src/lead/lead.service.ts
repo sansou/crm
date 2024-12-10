@@ -8,19 +8,21 @@ import { Lead } from './entities/leads.entity';
 import { createDynamooseId, createId } from '../utils/utils';
 import { EntityTypes } from '../utils/enums';
 import { normalizeLeadIds } from '../utils/normalizes';
+import { ProjectService } from '../project/project.service';
 
 @Injectable()
 export class LeadService {
   private dbInstance: Model<Lead>
   constructor(
+    private readonly projectService: ProjectService
   ) {
     this.dbInstance = dynamoose.model<Lead>('crm', LeadSchema)
   }
 
   async create(pk: string, dto: CreateLeadDto) {
     pk = createDynamooseId(pk, EntityTypes.PROJECT);
-    const sk = createDynamooseId(createId(), EntityTypes.LEAD);
-    const lead = await this.dbInstance.create({ pk, ...dto });    
+    await this.projectService.findById(pk);
+    const lead = await this.dbInstance.create({ pk, sk: dto.email, ...dto });    
     return normalizeLeadIds(lead);
   }
 

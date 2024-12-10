@@ -2,7 +2,7 @@ import { Item } from "dynamoose/dist/Item";
 
 export interface Lead extends Item{
   pk: string,
-  email: string, //Será a SK
+  sk: string, // será o email
   name: string,
   phone: string,
   position?: string,

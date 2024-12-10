@@ -18,14 +18,14 @@ export function normalizeProjectIdsForList(projects: Project[]): Project[] {
 
 export function normalizeLeadIds(lead: Lead): Lead {
   lead.pk = getIdByDynamooseId(lead.pk);
-  lead.email = getIdByDynamooseId(lead.email);
+  lead.sk = getIdByDynamooseId(lead.sk);
   return lead;
 }
 
 export function normalizeLeadIdsForList(leads: Lead[]): Lead[] {
   leads.forEach(lead => {
     lead.pk = getIdByDynamooseId(lead.pk);
-    lead.email = getIdByDynamooseId(lead.email);
+    lead.sk = getIdByDynamooseId(lead.sk);
   })
   return leads;
 }
