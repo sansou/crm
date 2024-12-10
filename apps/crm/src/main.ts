@@ -15,7 +15,7 @@ async function bootstrap() {
     .setTitle('CRM')
     .setDescription('The crm API description')
     .setVersion('1.0')
-    .addTag('crm')
+    .addTag('CRM API Docs')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
@@ -42,7 +42,7 @@ async function bootstrap() {
     region: process?.env?.AWS_REGION
   });
 
-  // dynamoose.aws.ddb.local();
-  dynamoose.aws.ddb.set(ddb)
+  dynamoose.aws.ddb.local();
+  // dynamoose.aws.ddb.set(ddb)
 }
 bootstrap();

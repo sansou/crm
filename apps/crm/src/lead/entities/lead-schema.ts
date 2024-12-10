@@ -5,27 +5,27 @@ export const LeadSchema = new Schema({
 		type: String,
 		hashKey: true,
 	},
-	sk: {
+	email: {
 		type: String,
 		rangeKey: true,
 	},
 	name: {
 		type: String,
 	},
-  email: {
-		type: String,
-	},
-  phone: {
+	phone: {
 		type: String,
 	},
 	position: {
 		type: String,
-	},	
-  state: {
+	},
+	state: {
 		type: String,
 	},
-  city: {
+	city: {
 		type: String,
+	},
+	info: {
+		type: [String, Object]
 	},
 	entityType: {
 		type: String,
@@ -52,5 +52,8 @@ export const LeadSchema = new Schema({
 	updatedAt: {
 		type: Date
 	}
-});
+}, {
+	saveUnknown: ["info", "info.*", "info.**"]
+	}
+);
 

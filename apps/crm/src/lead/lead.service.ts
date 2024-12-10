@@ -20,7 +20,7 @@ export class LeadService {
   async create(pk: string, dto: CreateLeadDto) {
     pk = createDynamooseId(pk, EntityTypes.PROJECT);
     const sk = createDynamooseId(createId(), EntityTypes.LEAD);
-    const lead = await this.dbInstance.create({ pk, sk, ...dto });    
+    const lead = await this.dbInstance.create({ pk, ...dto });    
     return normalizeLeadIds(lead);
   }
 
