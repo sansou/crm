@@ -20,7 +20,6 @@ export const LeadSchema = new Schema({
 	},
 	position: {
 		type: String,
-    default: 'ATIVO'
 	},	
   state: {
 		type: String,
