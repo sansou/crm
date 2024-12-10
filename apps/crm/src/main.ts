@@ -2,11 +2,14 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dynamoose from 'dynamoose';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AllExceptionsFilter } from './all-exception.filter';
 
 declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  //filtroGlobal
+  app.useGlobalFilters(new AllExceptionsFilter());
   //swagger
   const config = new DocumentBuilder()
     .setTitle('CRM')
@@ -24,7 +27,7 @@ async function bootstrap() {
     module.hot.dispose(() => app.close());
   }
 
-  //dynamoose
+  //dynamoDb
   const ddb = new dynamoose.aws.ddb.DynamoDB({
     credentials: {
       accessKeyId: process?.env?.AWS_ACCESS_KEY_ID,
