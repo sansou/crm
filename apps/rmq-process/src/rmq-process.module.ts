@@ -8,7 +8,7 @@ import { LeadService } from './lead.service';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true}),
-    // RabbitmqModule
+    RabbitmqModule
   ],
   controllers: [RmqProcessController],
   providers: [RmqProcessService, LeadService],
