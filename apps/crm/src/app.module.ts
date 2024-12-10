@@ -5,7 +5,7 @@ import { IntegrationModule } from './integration/integration.module';
 import { ProjectModule } from './project/project.module';
 import { RavenDbModule } from './raven-db/raven-db.module';
 import { LeadModule } from './lead/lead.module';
-import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
+// import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -14,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
     ProjectModule, 
     RavenDbModule, 
     LeadModule, 
-    RabbitmqModule,
+    // RabbitmqModule,
     ConfigModule.forRoot({ isGlobal: true})
   ],
   controllers: [AppController],

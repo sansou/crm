@@ -7,6 +7,7 @@ declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  //swagger
   const config = new DocumentBuilder()
     .setTitle('CRM')
     .setDescription('The crm API description')
@@ -17,11 +18,13 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, documentFactory);
   await app.listen(process.env.PORT ?? 3000);
 
+  //hotReload
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());
   }
 
+  //dynamoose
   const ddb = new dynamoose.aws.ddb.DynamoDB({
     credentials: {
       accessKeyId: process?.env?.AWS_ACCESS_KEY_ID,
