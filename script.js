@@ -1,36 +1,20 @@
-function captureLead() {
-  const name = document.querySelector('#name').value;
-  const email = document.querySelector('#email').value;
-  const phone = document.querySelector('#phone').value;
-
-  if (!name || !email || !phone) {
-    console.log('Por favor, preencha todos os campos!');
-    return;
-  }
-
-  const lead = {
-    name: name,
-    email: email,
-    phone: phone,
-  };
-
-  console.log('Lead Capturado:', lead);
-
-  sendLeadToAPI(lead);
-}
+const project = {
+  id: '',
+  apiToken: ''
+};
 
 // Função para enviar os dados capturados para a API
-function sendLeadToAPI(lead) {
+function sendDataToAPI(data) {
   fetch('http://localhost:3000/queue', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(lead),
+    body: JSON.stringify(data),
   })
     .then(response => response.json())
     .then(data => {
-      console.log('Lead enviado com sucesso:', data);
+      console.log('Dados enviados com sucesso:', data);
     })
     .catch(error => {
       console.error('Erro ao enviar o lead:', error);
@@ -38,7 +22,35 @@ function sendLeadToAPI(lead) {
 }
 
 // Adicionar um listener de evento para capturar o lead quando o formulário for enviado
-document.querySelector('#lead-form').addEventListener('submit', function (event) {
-  event.preventDefault();  // Impede o envio padrão do formulário
+function captureLead() {
+  const script = document.currentScript;
+  const form = script.closest('form'); // Pega a tag form que seja pai do script
+  if (form) {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      sendDataToAPI(data);
+    });
+  }
+}
+
+function getProjectId() {
+  const id = document.currentScript?.getAttribute("project-id");
+  if (id) project.id = id
+  if (!project.id) throw new Error('Script missing ID parameter.')
+  // if (!project.id.match(/[0-9a-f]{24}/g)) throw new Error('Script with abnormal ID parameter.')
+}
+
+async function main() {
+  getProjectId();
   captureLead();
-});
+}
+
+(async () => {
+  try {
+    await main()
+  } catch (error) {
+    console.log("Erro", error);
+  }
+})()
