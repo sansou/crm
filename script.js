@@ -1,15 +1,20 @@
+const project = {
+  id: '',
+  apiToken: ''
+};
+
 // Função para enviar os dados capturados para a API
-function sendDataFormToAPI(formData) {
+function sendDataToAPI(data) {
   fetch('http://localhost:3000/queue', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(formData),
+    body: JSON.stringify(data),
   })
     .then(response => response.json())
     .then(data => {
-      console.log('Dados enviados com sucesso:', formData);
+      console.log('Dados enviados com sucesso:', data);
     })
     .catch(error => {
       console.error('Erro ao enviar o lead:', error);
@@ -18,24 +23,28 @@ function sendDataFormToAPI(formData) {
 
 // Adicionar um listener de evento para capturar o lead quando o formulário for enviado
 function captureLead() {
-  document.getElementById('myForm').addEventListener('submit', function (event) {
-    event.preventDefault();  // Impede o envio padrão do formulário
-    const form = event.target;
-    const formData = new FormData(form);
-    sendDataFormToAPI(formData);
-  });
+  const script = document.currentScript;
+  const form = script.closest('form'); // Pega a tag form que seja pai do script
+  if (form) {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      sendDataToAPI(data);
+    });
+  }
 }
+
 function getProjectId() {
-  document.getElementById('myForm').addEventListener('submit', function (event) {
-    event.preventDefault();  // Impede o envio padrão do formulário
-    const form = event.target;
-    const formData = new FormData(form);
-    sendDataFormToAPI(formData);
-  });
+  const id = document.currentScript?.getAttribute("project-id");
+  if (id) project.id = id
+  if (!project.id) throw new Error('Script missing ID parameter.')
+  // if (!project.id.match(/[0-9a-f]{24}/g)) throw new Error('Script with abnormal ID parameter.')
 }
 
 async function main() {
-  captureLead()
+  getProjectId();
+  captureLead();
 }
 
 (async () => {

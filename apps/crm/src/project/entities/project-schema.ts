@@ -14,7 +14,13 @@ export const ProjectSchema = new Schema({
 	},
 	status: {
 		type: String,
-    default: 'ATIVO'
+		default: 'ATIVO'
+	},
+	apiToken: {
+		type: String,
+	},
+	domains: {
+		type: [String]
 	},
 	entityType: {
 		type: String,
