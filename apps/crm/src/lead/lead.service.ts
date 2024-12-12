@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, PreconditionFailedException, UnauthorizedException } from '@nestjs/common';
 import { UpdateLeadDto } from './dtos/update-lead.dto';
 import { CreateLeadDto } from './dtos/create-lead.dto';
 import { Model } from 'dynamoose/dist/Model';
@@ -10,7 +10,6 @@ import { EntityTypes } from '../utils/enums';
 import { normalizeLeadIds, normalizeLeadIdsForList } from '../utils/normalizes';
 import { ProjectService } from '../project/project.service';
 import { QueryResponse } from 'dynamoose/dist/ItemRetriever';
-import { log } from 'console';
 
 @Injectable()
 export class LeadService {
@@ -21,11 +20,23 @@ export class LeadService {
     this.dbInstance = dynamoose.model<Lead>('crm', LeadSchema)
   }
 
-  async create(dto: CreateLeadDto) {
+  async create(dto: CreateLeadDto, domain: string) {
+    
     const pk = createDynamooseId(dto.projectId, EntityTypes.PROJECT);
     const sk = createDynamooseId(dto.email, EntityTypes.LEAD);
-    await this.projectService.findById(pk);
-    const lead = await this.dbInstance.create({ pk, sk: dto.email, ...dto });    
+    const project = await this.projectService.findById(pk);
+    if (!project.domains.includes(domain)) throw new UnauthorizedException("This Domain doesn't belong to the project");
+    
+    let lead: Lead;
+    try {
+      lead = await this.dbInstance.create({ pk, sk, ...dto });
+    } catch (error) {
+      if (error.errorType === 'ConditionalCheckFailedException'){
+        throw new PreconditionFailedException("Já existe um lead cadastrado com esse email")
+      }
+      throw new Error(error);
+    }
+
     return normalizeLeadIds(lead);
   }
 

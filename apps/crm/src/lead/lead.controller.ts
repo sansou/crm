@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
 import { LeadService } from './lead.service';
 import { CreateLeadDto } from './dtos/create-lead.dto';
 import { UpdateLeadDto } from './dtos/update-lead.dto';
@@ -9,12 +9,13 @@ export class LeadController {
     private readonly service: LeadService
   ) { }
 
-  @Post('/project/:projectId')
+  @Post()
   async create(
-    @Param('projectId') pk: string,
+    @Req() request: Request,
     @Body() lead: CreateLeadDto
-  ) {
-    return this.service.create(pk, lead);
+  ) {    
+    const host = request.headers.host;
+    return this.service.create(lead, host);
   }
 
   @Get('/project/:projectId')
