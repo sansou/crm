@@ -20,7 +20,8 @@ export const ProjectSchema = new Schema({
 		type: String,
 	},
 	domains: {
-		type: [String]
+		type: Array,
+		schema: [String]
 	},
 	entityType: {
 		type: String,

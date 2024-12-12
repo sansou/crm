@@ -7,8 +7,10 @@ import { LeadSchema } from './entities/lead-schema';
 import { Lead } from './entities/leads.entity';
 import { createDynamooseId, createId } from '../utils/utils';
 import { EntityTypes } from '../utils/enums';
-import { normalizeLeadIds } from '../utils/normalizes';
+import { normalizeLeadIds, normalizeLeadIdsForList } from '../utils/normalizes';
 import { ProjectService } from '../project/project.service';
+import { QueryResponse } from 'dynamoose/dist/ItemRetriever';
+import { log } from 'console';
 
 @Injectable()
 export class LeadService {
@@ -19,8 +21,9 @@ export class LeadService {
     this.dbInstance = dynamoose.model<Lead>('crm', LeadSchema)
   }
 
-  async create(pk: string, dto: CreateLeadDto) {
-    pk = createDynamooseId(pk, EntityTypes.PROJECT);
+  async create(dto: CreateLeadDto) {
+    const pk = createDynamooseId(dto.projectId, EntityTypes.PROJECT);
+    const sk = createDynamooseId(dto.email, EntityTypes.LEAD);
     await this.projectService.findById(pk);
     const lead = await this.dbInstance.create({ pk, sk: dto.email, ...dto });    
     return normalizeLeadIds(lead);
@@ -35,22 +38,32 @@ export class LeadService {
   }
 
   async findAll(id: string) {
-    const projects = await this.dbInstance.query('entityType').eq('lead').exec();
-    return projects;
+    const leads = await this.dbInstance.query('entityType').eq('lead').exec();  
+    let lds = normalizeLeadIdsForList(this.arrayByQueryResponse(leads));
+    const ret = lds.filter(l => { 
+      return (l.pk === id)
+    });    
+    return ret;
+  }
+
+  private arrayByQueryResponse(leadQueryResponse: QueryResponse<Lead>): Lead[] {
+    const lds: Lead[] = []
+    for (let count = 0; count < leadQueryResponse.length; count++) {
+      lds.push(leadQueryResponse[count]);
+    }
+    return lds;
   }
 
   async findAllByProject(pk: string) {
-    console.log("pk antes", pk);    
     pk = createDynamooseId(pk, EntityTypes.PROJECT);
-    console.log("pk depois", pk);
     const leads = await this.dbInstance.get({ pk, sk: pk });
     return normalizeLeadIds(leads);
   }
 
   async update(pk: string, sk: string, updateDto: UpdateLeadDto) {
     pk = createDynamooseId(pk, EntityTypes.PROJECT);
-    sk = createDynamooseId(pk, EntityTypes.LEAD);
-    const project = await this.dbInstance.update({ pk, sk: pk }, updateDto);
+    sk = createDynamooseId(sk, EntityTypes.LEAD);
+    const project = await this.dbInstance.update({ pk, sk }, updateDto);
     return normalizeLeadIds(project);
   }
 

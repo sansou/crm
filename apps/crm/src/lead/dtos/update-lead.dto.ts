@@ -1,3 +1,5 @@
 import { Lead } from "../entities/leads.entity";
 
-export class UpdateLeadDto implements Partial<Lead> { }
+export class UpdateLeadDto implements Partial<Lead> { 
+
+}

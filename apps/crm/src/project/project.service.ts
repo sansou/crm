@@ -8,6 +8,7 @@ import { createDynamooseId, createId } from '../utils/utils';
 import { EntityTypes, StatusProject } from '../utils/enums';
 import { normalizeProjectIds, normalizeProjectIdsForList } from '../utils/normalizes';
 import { UpdateProjectDTO } from './dtos/update-project.dto';
+import { QueryResponse } from 'dynamoose/dist/ItemRetriever';
 
 @Injectable()
 export class ProjectService {
@@ -32,7 +33,16 @@ export class ProjectService {
 
   async findAll() {
     const projects = await this.dbInstance.query('entityType').eq('project').exec();
-    return projects;
+    const projs = this.arrayByQueryResponse(projects);
+    return normalizeProjectIdsForList(projs);
+  }
+
+  private arrayByQueryResponse(projQueryResponse: QueryResponse<Project>): Project[] {
+    const projs: Project[] = []
+    for (let count = 0; count < projQueryResponse.length; count++) {
+      projs.push(projQueryResponse[count]);
+    }
+    return projs;
   }
 
   async update(pk: string, updateDto: UpdateProjectDTO) {
@@ -41,7 +51,7 @@ export class ProjectService {
     return normalizeProjectIds(project);
   }
 
-  async delete(pk: string) {    
+  async delete(pk: string) {
     pk = createDynamooseId(pk, EntityTypes.PROJECT);
     await this.dbInstance.delete({ pk, sk: pk });
   }

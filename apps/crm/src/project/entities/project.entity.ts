@@ -5,6 +5,7 @@ export interface Project extends Item {
     sk: string,
     name: string,
     status: string,
+    domains: string[],
     entityType: string;
     createdAt?: Date,
     updatadAt?: Date,

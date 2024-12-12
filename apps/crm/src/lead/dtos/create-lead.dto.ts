@@ -18,6 +18,12 @@ export class CreateLeadDto {
   @IsNotEmpty({ message: "phone is required" })
   phone: string;
 
+  @ApiProperty({ description: 'Id do projeto', example: 'h12u13u21n123' })
+  @IsString()
+  @IsNotEmpty({ message: "projectId is required" })
+  projectId: string;
+
+
   @ApiProperty({ description: 'Cargo do lead', example: 'Diretor executivo', required: false })
   @IsString()
   position?: string;
