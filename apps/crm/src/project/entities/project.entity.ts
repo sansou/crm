@@ -1,12 +1,12 @@
 import { Item } from 'dynamoose/dist/Item';
 
 export interface Project extends Item {
-    pk: string,
-    sk: string,
+    primaryKey: string,
+    sortKey: string,
     name: string,
     status: string,
     domains: string[],
-    entityType: string;
+    description?: string,
     createdAt?: Date,
     updatadAt?: Date,
 }

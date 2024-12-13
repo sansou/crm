@@ -1,6 +1,6 @@
 export enum StatusProject {
-  Ativo = "ATIVO",
-  Desativado = "DESATIVADO",
+  ATIVO = "ATIVO",
+  DESATIVADO = "DESATIVADO",
 }
 
 /**
@@ -9,5 +9,17 @@ export enum StatusProject {
 export enum EntityTypes {
   PROJECT = 'PROJ',
   LEAD = 'LEAD',
-  INTEGRATION = 'ITGT',
+}
+
+/**
+ * https://www.revopscoop.com/post/lead-stage-vs-lead-status
+ * Referencia dos status do lead
+ */
+export enum StatusLead {
+  PROSPECT = 'PROSPECT',
+  OPEN = 'OPEN',
+  WORKING = 'WORKING',
+  DISQUALIFIED = 'DISQUALIFIED',
+  NOT_A_TARGER = 'NOT A TARGET',
+  QUALIFIED = 'QUALIFIED'
 }

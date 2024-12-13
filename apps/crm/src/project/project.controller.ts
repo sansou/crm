@@ -11,12 +11,14 @@ export class ProjectController {
   ) { }
 
   @Post()
-  async create(@Body() projDto: CreateProjectDTO) {       
+  async create(
+    @Body() projDto: CreateProjectDTO
+  ) {
     return await this.service.create(projDto);
   }
 
   @Get(':id')
-  async get(@Param('id') projId: string) {       
+  async get(@Param('id') projId: string) {
     return this.service.findById(projId);
   }
 
@@ -36,7 +38,7 @@ export class ProjectController {
   @Delete(':id')
   async delete(
     @Param('id') pk: string,
-  ) {  
+  ) {
     return await this.service.delete(pk);
   }
 }

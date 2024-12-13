@@ -1,23 +1,24 @@
 import { Schema } from "dynamoose";
+import { StatusProject } from "../../utils/enums";
 
 export const ProjectSchema = new Schema({
-	pk: {
+	primaryKey: {
 		type: String,
 		hashKey: true,
 	},
-	sk: {
+	sortKey: {
 		type: String,
 		rangeKey: true,
 	},
 	name: {
 		type: String,
 	},
+	description: {
+		type: String,
+	},
 	status: {
 		type: String,
-		default: 'ATIVO'
-	},
-	apiToken: {
-		type: String,
+		default: StatusProject.ATIVO
 	},
 	domains: {
 		type: Array,
@@ -32,11 +33,12 @@ export const ProjectSchema = new Schema({
 			type: 'global'
 		}
 	},
-	gsi1: {
+	//De qual domain esse lead veio
+	host: {
 		type: String,
 		default: "n",
 		index: {
-			name: 'leadIndex',
+			name: 'hostIndex',
 			rangeKey: 'createdAt',
 			type: 'global'
 		}

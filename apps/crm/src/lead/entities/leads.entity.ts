@@ -1,13 +1,15 @@
 import { Item } from "dynamoose/dist/Item";
 
 export interface Lead extends Item{
-  pk: string,
-  sk: string, // será o email
+  primaryKey: string,
+  sortKey: string, // será o email
   name: string,
   phone: string,
   position?: string,
   state?: string,
   city?: string,
-  entityType: string,
+  info?: any,
+  observation?: string [],
   createdAt: Date,
+  updatedAt: Date
 }

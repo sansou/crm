@@ -1,12 +1,14 @@
 import { Schema } from "dynamoose";
+import { StatusLead } from "../../utils/enums";
 
 export const LeadSchema = new Schema({
-	pk: {
+	//Id do projeto
+	primaryKey: {
 		type: String,
 		hashKey: true,
 	},
 	//Sk será o email
-	sk: {
+	sortKey: {
 		type: String,
 		rangeKey: true,
 	},
@@ -27,6 +29,14 @@ export const LeadSchema = new Schema({
 	},
 	info: {
 		type: [String, Object]
+	},	
+	observations: {
+		type: Array,
+		schema: [String]
+	},
+	status: {
+		type: String,
+		default: StatusLead.PROSPECT
 	},
 	entityType: {
 		type: String,
@@ -37,11 +47,11 @@ export const LeadSchema = new Schema({
 			type: 'global'
 		}
 	},
-	gsi1: {
+	host: {
 		type: String,
 		default: "n",
 		index: {
-			name: 'leadIndex',
+			name: 'hostIndex',
 			rangeKey: 'createdAt',
 			type: 'global'
 		}
