@@ -1,7 +1,7 @@
 export class Integration {
   constructor(
-    public pk: string,
-    public sk: string,
+    public primaryKey: string,
+    public sortKey: string,
     public accessToken: string,
   ) { }
 }

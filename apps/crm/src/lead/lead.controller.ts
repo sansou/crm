@@ -14,30 +14,30 @@ export class LeadController {
     @Req() request: Request,
     @Body() lead: CreateLeadDto
   ) {    
-    const host = request.headers.host;
+    const host = request.headers.hostname;
     return this.service.create(lead, host);
   }
 
   @Get('/project/:projectId')
-  async findAll(@Param('projectId') pk: string) {
-    return this.service.findAll(pk);
+  async findAll(@Param('projectId') primaryKey: string) {
+    return this.service.findAll(primaryKey);
   }
   
   @Delete(':id/project/:projectId')
   async delete(
-    @Param('id') pk:string,
-    @Param('projectId') sk:string,
+    @Param('id') primaryKey:string,
+    @Param('projectId') sortKey:string,
   ){ 
-    return await this.service.delete(pk, sk);
+    return await this.service.delete(primaryKey, sortKey);
   }
 
   @Patch(':id/project/:projectId')
   async update(
     @Body() lead: UpdateLeadDto,
-    @Param('id') pk:string,
-    @Param('project') sk: string
+    @Param('id') primaryKey:string,
+    @Param('project') sortKey: string
   ) {
-    return await this.service.update(pk, sk, lead);
+    return await this.service.update(primaryKey, sortKey, lead);
   }
 
 }

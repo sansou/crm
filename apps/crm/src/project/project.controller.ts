@@ -37,8 +37,8 @@ export class ProjectController {
 
   @Delete(':id')
   async delete(
-    @Param('id') pk: string,
+    @Param('id') primaryKey: string,
   ) {
-    return await this.service.delete(pk);
+    return await this.service.delete(primaryKey);
   }
 }

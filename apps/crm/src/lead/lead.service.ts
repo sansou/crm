@@ -22,14 +22,14 @@ export class LeadService {
 
   async create(dto: CreateLeadDto, domain: string) {
     
-    const pk = createDynamooseId(dto.projectId, EntityTypes.PROJECT);
-    const sk = createDynamooseId(dto.email, EntityTypes.LEAD);
-    const project = await this.projectService.findById(pk);
+    const primaryKey = createDynamooseId(dto.projectId, EntityTypes.PROJECT);
+    const sortKey = createDynamooseId(dto.email, EntityTypes.LEAD);
+    const project = await this.projectService.findById(primaryKey);
     if (!project.domains.includes(domain)) throw new UnauthorizedException("This Domain doesn't belong to the project");
     
     let lead: Lead;
     try {
-      lead = await this.dbInstance.create({ pk, sk, ...dto });
+      lead = await this.dbInstance.create({ primaryKey, sortKey, ...dto });
     } catch (error) {
       if (error.errorType === 'ConditionalCheckFailedException'){
         throw new PreconditionFailedException("Já existe um lead cadastrado com esse email")
@@ -40,10 +40,10 @@ export class LeadService {
     return normalizeLeadIds(lead);
   }
 
-  async findById(pk: string, sk: string) {
-    pk = createDynamooseId(pk, EntityTypes.PROJECT);
-    sk = createDynamooseId(sk, EntityTypes.LEAD);
-    const lead = await this.dbInstance.get({pk, sk});
+  async findById(primaryKey: string, sortKey: string) {
+    primaryKey = createDynamooseId(primaryKey, EntityTypes.PROJECT);
+    sortKey = createDynamooseId(sortKey, EntityTypes.LEAD);
+    const lead = await this.dbInstance.get({primaryKey, sortKey});
     if (!lead) throw new NotFoundException('Lead Not Found');
     return normalizeLeadIds(lead);
   }
@@ -52,7 +52,7 @@ export class LeadService {
     const leads = await this.dbInstance.query('entityType').eq('lead').exec();  
     let lds = normalizeLeadIdsForList(this.arrayByQueryResponse(leads));
     const ret = lds.filter(l => { 
-      return (l.pk === id)
+      return (l.primaryKey === id)
     });    
     return ret;
   }
@@ -65,22 +65,22 @@ export class LeadService {
     return lds;
   }
 
-  async findAllByProject(pk: string) {
-    pk = createDynamooseId(pk, EntityTypes.PROJECT);
-    const leads = await this.dbInstance.get({ pk, sk: pk });
+  async findAllByProject(primaryKey: string) {
+    primaryKey = createDynamooseId(primaryKey, EntityTypes.PROJECT);
+    const leads = await this.dbInstance.get({ primaryKey, sortKey: primaryKey });
     return normalizeLeadIds(leads);
   }
 
-  async update(pk: string, sk: string, updateDto: UpdateLeadDto) {
-    pk = createDynamooseId(pk, EntityTypes.PROJECT);
-    sk = createDynamooseId(sk, EntityTypes.LEAD);
-    const project = await this.dbInstance.update({ pk, sk }, updateDto);
+  async update(primaryKey: string, sortKey: string, updateDto: UpdateLeadDto) {
+    primaryKey = createDynamooseId(primaryKey, EntityTypes.PROJECT);
+    sortKey = createDynamooseId(sortKey, EntityTypes.LEAD);
+    const project = await this.dbInstance.update({ primaryKey, sortKey }, updateDto);
     return normalizeLeadIds(project);
   }
 
-  async delete(pk: string, sk: string) {
-    pk = createDynamooseId(pk, EntityTypes.PROJECT);
-    await this.dbInstance.delete({ pk, sk });
+  async delete(primaryKey: string, sortKey: string) {
+    primaryKey = createDynamooseId(primaryKey, EntityTypes.PROJECT);
+    await this.dbInstance.delete({ primaryKey, sortKey });
   }
 
 }

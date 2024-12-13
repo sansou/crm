@@ -7,7 +7,7 @@ export const LeadSchema = new Schema({
 		type: String,
 		hashKey: true,
 	},
-	//Sk será o email
+	//sortKey será o email
 	sortKey: {
 		type: String,
 		rangeKey: true,
