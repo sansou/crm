@@ -3,13 +3,11 @@ import { Project } from '../project/entities/project.entity';
 import { Integration } from './models/integration';
 import { ProjectService } from '../project/project.service';
 import DocumentStore, { IDocumentStore } from 'ravendb';
-import { RavenDbService } from '../raven-db/raven-db.service';
 
 @Injectable()
 export class IntegrationService {
   constructor(
     private readonly projectService: ProjectService,
-    private readonly dbService: RavenDbService
   ) { }
 
   async addAcessToken(integration: Integration, projId: string) {
