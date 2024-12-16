@@ -27,7 +27,6 @@ function captureLead() {
   const form = script.closest('form'); // Pega a tag form que seja pai do script
   if (form) {
     form.addEventListener('submit', (event) => {
-      event.preventDefault();
       const formData = new FormData(form);
       const data = Object.fromEntries(formData.entries());
       sendDataToAPI(data);
@@ -36,7 +35,7 @@ function captureLead() {
 }
 
 function getProjectId() {
-  const id = document.currentScript?.getAttribute("project-id");
+  const id = document.currentScript?.getAttribute("data-project-id");
   if (id) project.id = id
   if (!project.id) throw new Error('Script missing ID parameter.')
   // if (!project.id.match(/[0-9a-f]{24}/g)) throw new Error('Script with abnormal ID parameter.')
