@@ -1,11 +1,10 @@
 const project = {
   id: '',
-  apiToken: ''
 };
 
 // Função para enviar os dados capturados para a API
 function sendDataToAPI(data) {
-  fetch('http://localhost:3000/queue', {
+  fetch('http://localhost:4000/projects', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
