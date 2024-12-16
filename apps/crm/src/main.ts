@@ -33,10 +33,7 @@ async function bootstrap() {
     module.hot.dispose(() => app.close());
   }
 
-  //dynamoDb
-  console.log('keyID', process?.env?.AWS_ACCESS_KEY_ID);
-  console.log('access key ', process?.env?.AWS_ACCESS_KEY);
-  
+  //dynamoDb  
   const ddb = new dynamoose.aws.ddb.DynamoDB({
     credentials: {
       accessKeyId: process?.env?.AWS_ACCESS_KEY_ID,

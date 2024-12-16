@@ -24,9 +24,7 @@ export class ProjectService {
     
     try {
       project = await this.dbInstance.create({ pk, sk: pk, ...dto });
-      
-      console.log('project', project);
-    } catch(error) {
+          } catch(error) {
       throw new Error(error);
     }
     return normalizeProjectIds(project);
