@@ -23,7 +23,6 @@ export class CreateLeadDto {
   @IsNotEmpty({ message: "projectId is required" })
   projectId: string;
 
-
   @ApiProperty({ description: 'Cargo do lead', example: 'Diretor executivo', required: false })
   @IsString()
   position?: string;
@@ -35,4 +34,8 @@ export class CreateLeadDto {
   @ApiProperty({ description: "Cidade do lead", example: 'São Paulo', required: false })
   @IsString()
   city?: string;
+  
+  @ApiProperty({ description: "Host do lead", example: 'www.google.com', required: false })
+  @IsString()
+  host?: string;
 }
