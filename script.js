@@ -3,9 +3,9 @@ const project = {
 };
 
 // Função para enviar os dados capturados para a API
-function sendDataToAPI(data, projectId) {
+function sendDataToAPI(data) {
   const body = JSON.stringify(data);
-  body.projectId = projectId;
+  body.projectId = this.project.id;
 
   fetch('http://localhost:4000/projects', {
     method: 'POST',
