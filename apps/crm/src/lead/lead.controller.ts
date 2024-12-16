@@ -14,7 +14,7 @@ export class LeadController {
     @Req() request: Request,
     @Body() lead: CreateLeadDto
   ) {    
-    const host = request.headers.hostname;
+    const host = request.headers['hostname'];
     return this.service.create(lead, host);
   }
 

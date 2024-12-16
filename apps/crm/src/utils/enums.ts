@@ -15,6 +15,7 @@ export enum EntityTypes {
  * https://www.revopscoop.com/post/lead-stage-vs-lead-status
  * Referencia dos status do lead
  */
+
 export enum StatusLead {
   PROSPECT = 'PROSPECT',
   OPEN = 'OPEN',
