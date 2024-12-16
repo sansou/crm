@@ -3,13 +3,16 @@ const project = {
 };
 
 // Função para enviar os dados capturados para a API
-function sendDataToAPI(data) {
+function sendDataToAPI(data, projectId) {
+  const body = JSON.stringify(data);
+  body.projectId = projectId;
+
   fetch('http://localhost:4000/projects', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(data),
+    body: body,
   })
     .then(response => response.json())
     .then(data => {
