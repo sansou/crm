@@ -13,7 +13,7 @@ import { ConfigModule } from '@nestjs/config';
     ProjectModule, 
     LeadModule, 
     RabbitmqModule,
-    ConfigModule.forRoot({ isGlobal: true})
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env.local'})
   ],
   controllers: [AppController],
   providers: [AppService],

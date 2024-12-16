@@ -3,12 +3,12 @@ import { StatusLead } from "../../utils/enums";
 
 export const LeadSchema = new Schema({
 	//Id do projeto
-	primaryKey: {
+	pk: {
 		type: String,
 		hashKey: true,
 	},
-	//sortKey será o email
-	sortKey: {
+	//sk será o email
+	sk: {
 		type: String,
 		rangeKey: true,
 	},

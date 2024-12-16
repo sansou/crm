@@ -19,14 +19,22 @@ export class ProjectService {
   }
 
   async create(dto: CreateProjectDTO) {
-    const primaryKey = createDynamooseId(createId(), EntityTypes.PROJECT);
-    const project = await this.dbInstance.create({ primaryKey, sortKey: primaryKey, ...dto });
+    const pk = createDynamooseId(createId(), EntityTypes.PROJECT);
+    let project: Project;
+    
+    try {
+      project = await this.dbInstance.create({ pk, sk: pk, ...dto });
+      
+      console.log('project', project);
+    } catch(error) {
+      throw new Error(error);
+    }
     return normalizeProjectIds(project);
   }
 
-  async findById(primaryKey: string) {
-    primaryKey = createDynamooseId(primaryKey, EntityTypes.PROJECT)
-    const proj = await this.dbInstance.get({ primaryKey, sortKey: primaryKey });
+  async findById(pk: string) {
+    pk = createDynamooseId(pk, EntityTypes.PROJECT)
+    const proj = await this.dbInstance.get({ pk, sk: pk });
     if (!proj) throw new NotFoundException('Project Not Found');
     return normalizeProjectIds(proj);
   }
@@ -45,15 +53,15 @@ export class ProjectService {
     return projs;
   }
 
-  async update(primaryKey: string, updateDto: UpdateProjectDTO) {
-    primaryKey = createDynamooseId(primaryKey, EntityTypes.PROJECT);
-    const project = await this.dbInstance.update({ primaryKey, sortKey: primaryKey }, updateDto);
+  async update(pk: string, updateDto: UpdateProjectDTO) {
+    pk = createDynamooseId(pk, EntityTypes.PROJECT);
+    const project = await this.dbInstance.update({ pk, sk: pk }, updateDto);
     return normalizeProjectIds(project);
   }
 
-  async delete(primaryKey: string) {
-    primaryKey = createDynamooseId(primaryKey, EntityTypes.PROJECT);
-    await this.dbInstance.delete({ primaryKey, sortKey: primaryKey });
+  async delete(pk: string) {
+    pk = createDynamooseId(pk, EntityTypes.PROJECT);
+    await this.dbInstance.delete({ pk, sk: pk });
   }
 
 

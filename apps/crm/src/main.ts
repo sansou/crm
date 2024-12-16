@@ -34,15 +34,18 @@ async function bootstrap() {
   }
 
   //dynamoDb
+  console.log('keyID', process?.env?.AWS_ACCESS_KEY_ID);
+  console.log('access key ', process?.env?.AWS_ACCESS_KEY);
+  
   const ddb = new dynamoose.aws.ddb.DynamoDB({
     credentials: {
       accessKeyId: process?.env?.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process?.env?.AWS_SECRET_ACCESS_KEY
+      secretAccessKey: process?.env?.AWS_ACCESS_KEY
     },
     region: process?.env?.AWS_REGION
   });
 
-  dynamoose.aws.ddb.local();
-  // dynamoose.aws.ddb.set(ddb);
+  // dynamoose.aws.ddb.local();
+  dynamoose.aws.ddb.set(ddb);
 }
 bootstrap();

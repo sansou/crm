@@ -13,7 +13,7 @@ export class ProjectController {
   @Post()
   async create(
     @Body() projDto: CreateProjectDTO
-  ) {
+  ) {    
     return await this.service.create(projDto);
   }
 
@@ -37,8 +37,8 @@ export class ProjectController {
 
   @Delete(':id')
   async delete(
-    @Param('id') primaryKey: string,
+    @Param('id') pk: string,
   ) {
-    return await this.service.delete(primaryKey);
+    return await this.service.delete(pk);
   }
 }

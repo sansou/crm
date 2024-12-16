@@ -2,8 +2,8 @@ import { Item } from "dynamoose/dist/Item";
 import { StatusLead } from "../../utils/enums";
 
 export interface Lead extends Item{
-  primaryKey: string,
-  sortKey: string, // será o email
+  pk: string,
+  sk: string, // será o email
   name: string,
   phone: string,
   status: StatusLead,

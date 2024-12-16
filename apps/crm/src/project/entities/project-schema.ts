@@ -2,11 +2,11 @@ import { Schema } from "dynamoose";
 import { StatusProject } from "../../utils/enums";
 
 export const ProjectSchema = new Schema({
-	primaryKey: {
+	pk: {
 		type: String,
 		hashKey: true,
 	},
-	sortKey: {
+	sk: {
 		type: String,
 		rangeKey: true,
 	},
